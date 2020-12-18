@@ -6,5 +6,5 @@
 
 # data
 
-* Convert matlab files (*.mat) to numpy and csv files using `load_mat.ipynb`
+* Convert matlab files (*.mat) to npz and csv files using `load_mat.ipynb`
 * Then, load the converted data similartly to `load_data.ipynb`
