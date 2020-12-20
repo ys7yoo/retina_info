@@ -1,8 +1,7 @@
 # retina_info
 
 * cleaned up code for experiments with high-resolution stimuli (collaboration with CBNU College of Medicine)
-* uses [pysta2](https://github.com/ys7yoo/pysta2)
-* Clone this and pysta2 in the same folder 
+* Codes in this repo use [pysta2](https://github.com/ys7yoo/pysta2). Thus, clone this and pysta2 in the same folder like this. 
 ```
 git clone https://github.com/ys7yoo/pysta2.git
 git clone https://github.com/ys7yoo/retina_info.git
