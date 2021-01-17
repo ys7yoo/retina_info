@@ -1,3 +1,4 @@
 .ipynb_checkpoints
-data
-figure/
+.DS_Store
+data_*
+figure/*
