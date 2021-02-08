@@ -7,6 +7,10 @@ git clone https://github.com/ys7yoo/pysta2.git
 git clone https://github.com/ys7yoo/retina_info.git
 ```
 
+## Other packages
+```
+pip install jupyter matplotlib scikit-learn scikit-image pandas h5py tqdm
+```
 
 # data
 
