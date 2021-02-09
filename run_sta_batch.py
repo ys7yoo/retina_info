@@ -32,9 +32,6 @@ import pysta
 import pandas as pd
 import os
 
-get_ipython().run_line_magic('load_ext', 'autoreload')
-get_ipython().run_line_magic('autoreload', '2')
-
 
 # In[2]:
 
@@ -312,7 +309,7 @@ if fps == 10:
 elif fps == 25:
     tap = 20
 elif fps == 30:
-    tap = 24
+    tap = 10
 
 
 # ## calc STA and peak-to-peak difference for all RGCs
@@ -323,6 +320,9 @@ elif fps == 30:
 # choose a channel
 sta_p2ps = []
 sta_psnrs = []
+reg_sta_p2ps = []
+reg_sta_psnrs = []
+
 
 for ch_idx in range(spike_counts.shape[0]):
 
@@ -339,7 +339,7 @@ for ch_idx in range(spike_counts.shape[0]):
     sta_p2ps.append(p2p(sta))
     sta_psnrs.append(psnr(sta))
 
-    np.save(os.path.join('results', dataset, 'sta', channel_name + '_' + cell_type), sta)
+    np.save(os.path.join('results', dataset, 'sta', channel_name), sta)
 
 #     print(spike_triggered_stim.shape)
 
@@ -347,10 +347,25 @@ for ch_idx in range(spike_counts.shape[0]):
 #     #                     fig_basename=os.path.join('figure', 'sta', channel_name))
 #     # plt.title(channel_name + '(%.2f)'.format)
 
+    # ## calc regularized STA
+    reg_sta = pysta.normalize_sta(stim, sta)
+
+    reg_sta_p2ps.append(p2p(reg_sta))
+    reg_sta_psnrs.append(psnr(reg_sta))
+
+    np.save(os.path.join('results', dataset, 'rsta', channel_name), reg_sta)
+
 info['sta_p2p'] = sta_p2ps
 info['sta_psnr'] = sta_psnrs
 
+info['reg_sta_p2p'] = reg_sta_p2ps
+info['reg_sta_psnr'] = reg_sta_psnrs
+
 info.to_csv(dataset + '_sta.csv', index=None)
+
+
+
+
 
 
 exit()   ## STOP HERE!
@@ -552,13 +567,13 @@ rfftfreq(tap, 1/fps)
 # In[1]:
 
 
-sta_reg = pysta.normalize_sta(stim, sta)
+reg_sta = pysta.normalize_sta(stim, sta)
 
 
 # In[ ]:
 
 
-plot_spatio_temporal(sta_reg, 
+plot_spatio_temporal(reg_sta,
                      width=width, height=height, dt=1000/fps,
                      ylabel='rSTA')
 #                      fig_basename=os.path.join('figure', 'rsta', channel_name))
@@ -568,7 +583,7 @@ plot_spatio_temporal(sta_reg,
 
 
 # spatial spectrum
-calc_spatial_spectrum(sta_reg)
+calc_spatial_spectrum(reg_sta)
 
 plt.savefig(os.path.join('figure',dataset, channel_name + '_rsta_space_spectrum.pdf'))
 
@@ -579,10 +594,10 @@ plt.savefig(os.path.join('figure',dataset, channel_name + '_rsta_space_spectrum.
 plt.figure(figsize=(15,5))
 
 plt.subplot(121)
-plot_temporal_profile(sta_reg, 1/fps)
+plot_temporal_profile(reg_sta, 1 / fps)
 
 plt.subplot(122)
-plot_temporal_spectrum(sta_reg, 1/fps)
+plot_temporal_spectrum(reg_sta, 1 / fps)
 
 plt.savefig(os.path.join('figure',dataset, channel_name + '_rsta_temp_spectrum.pdf'))
 
